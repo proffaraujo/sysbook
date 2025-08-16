@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Doações - Biblioteca Comunitária</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600"><rect fill="%23f0f2f5" width="1000" height="600"/><g fill="%23e1e5e9"><circle cx="200" cy="150" r="80"/><circle cx="800" cy="200" r="60"/><circle cx="400" cy="400" r="100"/><circle cx="750" cy="450" r="40"/></g></svg>');
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #495057;
+            text-align: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+
+        .card p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .campaign-card {
+            border-left: 5px solid #28a745;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        .search-form .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .book-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .book-author {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-genre {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form .form-group {
+                min-width: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>📚 Biblioteca Comunitária</h1>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#home" class="nav-link active">Início</a>
+                    <a href="#catalog" class="nav-link">Catálogo</a>
+                    <a href="#donate" class="nav-link">Doar Livros</a>
+                    <a href="#admin" class="nav-link">Administração</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Seção Home -->
+        <section id="home-section" class="section">
+            <div class="hero">
+                <h2>Transforme Vidas Através da Leitura</h2>
+                <p>Doe livros, construa conhecimento e fortaleça nossa comunidade</p>
+                <button class="btn" onclick="showSection('donate')">Fazer Doação</button>
+                <button class="btn btn-secondary" onclick="showSection('catalog')">Ver Catálogo</button>
+            </div>
+
+            <!-- Painel de Impacto -->
+            <div class="section">
+                <h3>Nosso Impacto</h3>
+                <div class="stats-grid" id="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-doacoes">-</div>
+                        <div class="stat-label">Doações Recebidas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-doadores">-</div>
+                        <div class="stat-label">Doadores Ativos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-livros">-</div>
+                        <div class="stat-label">Livros no Acervo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="novos-titulos">-</div>
+                        <div class="stat-label">Novos Títulos (Último Mês)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campanhas Ativas -->
+            <div class="section">
+                <h3>Campanhas Ativas</h3>
+                <div id="campanhas-container">
+                    <div class="loading">Carregando campanhas...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Catálogo -->
+        <section id="catalog-section" class="section hidden">
+            <h3>Catálogo de Livros</h3>
+            
+            <div class="search-section">
+                <form class="search-form" id="search-form">
+                    <div class="form-group">
+                        <label for="search-titulo">Buscar por Título</label>
+                        <input type="text" id="search-titulo" class="form-control" placeholder="Digite o título do livro">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-autor">Buscar por Autor</label>
+                        <input type="text" id="search-autor" class="form-control" placeholder="Digite o nome do autor">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearSearch()">Limpar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="books-container">
+                <div class="loading">Carregando livros...</div>
+            </div>
+        </section>
+
+        <!-- Seção Doação -->
+        <section id="donate-section" class="section hidden">
+            <h3>Fazer Doação de Livros</h3>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h4>Já sou cadastrado</h4>
+                    <p>Se você já possui cadastro, registre sua nova doação rapidamente.</p>
+                    <button class="btn" onclick="openModal('modal-doacao-cadastrado')">Registrar Doação</button>
+                </div>
+                <div class="card">
+                    <h4>Novo doador</h4>
+                    <p>Primeira vez doando? Faça seu cadastro e registre sua doação.</p>
+                    <button class="btn" onclick="openModal('modal-novo-doador')">Cadastrar e Doar</button>
+                </div>
+                <div class="card">
+                    <h4>Consultar doação</h4>
+                    <p>Acompanhe o status da sua doação usando o protocolo.</p>
+                    <button class="btn btn-secondary" onclick="openModal('modal-consulta-doacao')">Consultar Status</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Admin -->
+        <section id="admin-section" class="section hidden">
+            <h3>Área Administrativa</h3>
+            
+            <div id="admin-login" class="card" style="max-width: 400px; margin: 0 auto;">
+                <h4>Login do Administrador</h4>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </form>
+            </div>
+
+            <div id="admin-dashboard" class="hidden">
+                <div class="cards-grid">
+                    <div class="card">
+                        <h4>Doações Pendentes</h4>
+                        <p>Gerencie as doações aguardando confirmação.</p>
+                        <button class="btn" onclick="loadDoacoesPendentes()">Gerenciar Doações</button>
+                    </div>
+                    <div class="card">
+                        <h4>Gerenciar Livros</h4>
+                        <p>Adicione, edite ou remova livros do acervo.</p>
+                        <button class="btn" onclick="loadLivrosAdmin()">Gerenciar Acervo</button>
+                    </div>
+                    <div class="card">
+                        <h4>Campanhas</h4>
+                        <p>Crie e gerencie campanhas de doação.</p>
+                        <button class="btn" onclick="loadCampanhasAdmin()">Gerenciar Campanhas</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()" style="margin-top: 2rem;">Sair</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modais -->
+    
+    <!-- Modal Novo Doador -->
+    <div id="modal-novo-doador" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modal-novo-doador')">&times;</span>
+            <h4>Cadastro de Novo Doador</h4>
+            <form id="form-novo-doador">
+                <div class="form-group">
+                    <label for="nome-completo">Nome Completo</label>
+                    <input type="text" id="nome-completo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="descricao-doacao">Descrição da Doação</label>
+                    <textarea id="descricao-doacao" class="form-control" rows="4" placeholder="Descreva os livros que deseja doar (títulos, autores, quantidade, etc.)"></textarea>
+                </div>
+                <button type="submit" class="btn">Cadastrar e Registrar Doação</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Doação Cadastrado -->
+    <div id="modal-doacao-cadastrado" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modal-doacao-cadastrado')">&times;</span>
+            <h4>Registrar Nova Doação</h4>
+            <form id="form-doacao-cadastrado">
+                <div class="form-group">
+                    <label for="email-doador">Seu E-mail</label>
+                    <input type="email" id="email-doador" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="descricao-doacao-cadastrado">Descrição da Doação</label>
+                    <textarea id="descricao-doacao-cadastrado" class="form-control" rows="4" placeholder="Descreva os livros que deseja doar (títulos, autores, quantidade, etc.)"></textarea>
+                </div>
+                <button type="submit" class="btn">Registrar Doação</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Consulta Doação -->
+    <div id="modal-consulta-doacao" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modal-consulta-doacao')">&times;</span>
+            <h4>Consultar Status da Doação</h4>
+            <form id="form-consulta-doacao">
+                <div class="form-group">
+                    <label for="protocolo">Protocolo da Doação</label>
+                    <input type="text" id="protocolo" class="form-control" placeholder="Ex: DOA12345678" required>
+                </div>
+                <button type="submit" class="btn">Consultar</button>
+            </form>
+            <div id="resultado-consulta" class="hidden" style="margin-top: 2rem;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Doações - Biblioteca Comunitária. Desenvolvido para fortalecer nossa comunidade através da leitura.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Variáveis globais
+        let currentSection = 'home';
+        let authToken = localStorage.getItem('adminToken');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadImpactData();
+            loadCampanhasAtivas();
+            loadCatalog();
+            
+            // Event listeners
+            setupEventListeners();
+            
+            // Verificar se admin já está logado
+            if (authToken) {
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+            }
+        });
+
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('href').substring(1);
+                    showSection(section);
+                });
+            });
+
+            // Forms
+            document.getElementById('search-form').addEventListener('submit', handleSearch);
+            document.getElementById('form-novo-doador').addEventListener('submit', handleNovoDoador);
+            document.getElementById('form-doacao-cadastrado').addEventListener('submit', handleDoacaoCadastrado);
+            document.getElementById('form-consulta-doacao').addEventListener('submit', handleConsultaDoacao);
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+        }
+
+        // Navegação
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Mostrar seção selecionada
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            // Atualizar navegação
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + sectionName) {
+                    link.classList.add('active');
+                }
+            });
+            
+            currentSection = sectionName;
+        }
+
+        // Modais
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // API calls
+        async function apiCall(endpoint, options = {}) {
+            const url = `${window.location.origin}/api${endpoint}`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            if (authToken && !config.headers.Authorization) {
+                config.headers.Authorization = `Bearer ${authToken}`;
+            }
+            
+            try {
+                const response = await fetch(url, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erro na requisição');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Carregar dados do painel de impacto
+        async function loadImpactData() {
+            try {
+                const data = await apiCall('/painel-impacto');
+                
+                document.getElementById('total-doacoes').textContent = data.totalDoacoes || 0;
+                document.getElementById('total-doadores').textContent = data.totalDoadores || 0;
+                document.getElementById('total-livros').textContent = data.totalLivros || 0;
+                document.getElementById('novos-titulos').textContent = data.novosTitulosUltimoMes || 0;
+            } catch (error) {
+                console.error('Erro ao carregar dados de impacto:', error);
+            }
+        }
+
+        // Carregar campanhas ativas
+        async function loadCampanhasAtivas() {
+            try {
+                const campanhas = await apiCall('/campanhas/ativas');
+                const container = document.getElementById('campanhas-container');
+                
+                if (campanhas.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #6c757d;">Nenhuma campanha ativa no momento.</p>';
+                    return;
+                }
+                
+                container.innerHTML = campanhas.map(campanha => `
+                    <div class="card campaign-card">
+                        <h4>${campanha.titulo}</h4>
+                        <p>${campanha.descricao}</p>
+                        ${campanha.meta ? `<p><strong>Meta:</strong> ${campanha.meta} livros</p>` : ''}
+                        ${campanha.data_termino ? `<p><strong>Termina em:</strong> ${new Date(campanha.data_termino).toLocaleDateString('pt-BR')}</p>` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar campanhas:', error);
+                document.getElementById('campanhas-container').innerHTML = '<p style="text-align: center; color: #dc3545;">Erro ao carregar campanhas.</p>';
+            }
+        }
+
+        // Carregar catálogo
+        async function loadCatalog() {
+            try {
+                const livros = await apiCall('/livros/publico');
+                displayBooks(livros);
+            } catch (error) {
+                console.error('Erro ao carregar catálogo:', error);
+                document.getElementById('books-container').innerHTML = '<p style="text-align: center; color: #dc3545;">Erro ao carregar catálogo.</p>';
+            }
+        }
+
+        // Exibir livros
+        function displayBooks(livros) {
+            const container = document.getElementById('books-container');
+            
+            if (livros.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d;">Nenhum livro encontrado.</p>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="books-grid">
+                    ${livros.map(livro => `
+                        <div class="book-card">
+                            <div class="book-title">${livro.titulo}</div>
+                            <div class="book-author">por ${livro.autor}</div>
+                            ${livro.genero ? `<span class="book-genre">${livro.genero}</span>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Busca no catálogo
+        async function handleSearch(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('search-titulo').value.trim();
+            const autor = document.getElementById('search-autor').value.trim();
+            
+            try {
+                let endpoint = '/livros/publico';
+                const params = new URLSearchParams();
+                
+                if (titulo) params.append('titulo', titulo);
+                if (autor) params.append('autor', autor);
+                
+                if (params.toString()) {
+                    endpoint += '?' + params.toString();
+                }
+                
+                const livros = await apiCall(endpoint);
+                displayBooks(livros);
+            } catch (error) {
+                showAlert('Erro ao buscar livros', 'error');
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('search-titulo').value = '';
+            document.getElementById('search-autor').value = '';
+            loadCatalog();
+        }
+
+        // Cadastro de novo doador
+        async function handleNovoDoador(e) {
+            e.preventDefault();
+            
+            const formData = {
+                doadorDados: {
+                    nomeCompleto: document.getElementById('nome-completo').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    telefone: document.getElementById('telefone').value.trim()
+                },
+                doadorEmail: document.getElementById('email').value.trim(),
+                descricaoGeral: document.getElementById('descricao-doacao').value.trim(),
+                itens: []
+            };
+            
+            try {
+                const resultado = await apiCall('/doacoes/intencao', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+                
+                if (resultado.success) {
+                    showAlert(`Doação registrada com sucesso! Protocolo: ${resultado.protocolo}`, 'success');
+                    closeModal('modal-novo-doador');
+                    document.getElementById('form-novo-doador').reset();
+                } else {
+                    showAlert(resultado.message || 'Erro ao registrar doação', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao registrar doação: ' + error.message, 'error');
+            }
+        }
+
+        // Doação para usuário cadastrado
+        async function handleDoacaoCadastrado(e) {
+            e.preventDefault();
+            
+            const formData = {
+                doadorEmail: document.getElementById('email-doador').value.trim(),
+                descricaoGeral: document.getElementById('descricao-doacao-cadastrado').value.trim(),
+                itens: []
+            };
+            
+            try {
+                const resultado = await apiCall('/doacoes/intencao', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+                
+                if (resultado.success) {
+                    showAlert(`Doação registrada com sucesso! Protocolo: ${resultado.protocolo}`, 'success');
+                    closeModal('modal-doacao-cadastrado');
+                    document.getElementById('form-doacao-cadastrado').reset();
+                } else {
+                    showAlert(resultado.message || 'Erro ao registrar doação', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro ao registrar doação: ' + error.message, 'error');
+            }
+        }
+
+        // Consulta de doação
+        async function handleConsultaDoacao(e) {
+            e.preventDefault();
+            
+            const protocolo = document.getElementById('protocolo').value.trim();
+            
+            try {
+                const doacao = await apiCall(`/doacoes/protocolo/${protocolo}`);
+                
+                const resultado = document.getElementById('resultado-consulta');
+                resultado.innerHTML = `
+                    <div class="alert alert-success">
+                        <h5>Doação Encontrada</h5>
+                        <p><strong>Protocolo:</strong> ${doacao.protocolo}</p>
+                        <p><strong>Status:</strong> ${getStatusText(doacao.status)}</p>
+                        <p><strong>Data da Intenção:</strong> ${new Date(doacao.data_intencao).toLocaleDateString('pt-BR')}</p>
+                        ${doacao.data_confirmacao ? `<p><strong>Data de Confirmação:</strong> ${new Date(doacao.data_confirmacao).toLocaleDateString('pt-BR')}</p>` : ''}
+                        <p><strong>Descrição:</strong> ${doacao.descricao_geral || 'Não informada'}</p>
+                    </div>
+                `;
+                resultado.classList.remove('hidden');
+            } catch (error) {
+                const resultado = document.getElementById('resultado-consulta');
+                resultado.innerHTML = `
+                    <div class="alert alert-error">
+                        <p>Doação não encontrada. Verifique o protocolo informado.</p>
+                    </div>
+                `;
+                resultado.classList.remove('hidden');
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pendente': 'Aguardando Confirmação',
+                'confirmada': 'Confirmada',
+                'cancelada': 'Cancelada'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Login admin
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            try {
+                const resultado = await apiCall('/admin/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (resultado.success) {
+                    authToken = resultado.token;
+                    localStorage.setItem('adminToken', authToken);
+                    
+                    document.getElementById('admin-login').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    
+                    showAlert('Login realizado com sucesso!', 'success');
+                } else {
+                    showAlert(resultado.message || 'Erro no login', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro no login: ' + error.message, 'error');
+            }
+        }
+
+        function logout() {
+            authToken = null;
+            localStorage.removeItem('adminToken');
+            
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('login-form').reset();
+            
+            showAlert('Logout realizado com sucesso!', 'success');
+        }
+
+        // Funções administrativas placeholder
+        function loadDoacoesPendentes() {
+            showAlert('Funcionalidade em desenvolvimento - Carregamento de doações pendentes', 'success');
+        }
+
+        function loadLivrosAdmin() {
+            showAlert('Funcionalidade em desenvolvimento - Gestão de livros', 'success');
+        }
+
+        function loadCampanhasAdmin() {
+            showAlert('Funcionalidade em desenvolvimento - Gestão de campanhas', 'success');
+        }
+
+        // Utilitários
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            // Inserir no início do container principal
+            const main = document.querySelector('main');
+            main.insertBefore(alertDiv, main.firstChild);
+            
+            // Auto remover após 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Event listener para fechar modais clicando fora
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
