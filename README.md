@@ -480,7 +480,7 @@ npm run test:performance   # Testes de performance
 - **Documentation:** [docs.biblioteca.org](https://docs.biblioteca.org)
 - **Issues:** [GitHub Issues](https://github.com/biblioteca/sistema-gestao-doacoes/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/biblioteca/sistema-gestao-doacoes/discussions)
-- **Email:** suporte@biblioteca.org
+- **Email:** bib_ucc_jangurussu@gmail.com
 
 ### **🐛 Reportar Bugs**
 
