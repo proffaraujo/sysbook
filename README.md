@@ -500,8 +500,8 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](L
 
 ## 🙏 **Agradecimentos**
 
-• Biblioteca parceira da comunidade do Jangurussu pelos feedbacks e apoio
-• À Profa. LIZIANE HOBMEIR e à UNINTER, pela orienta e oportunidade que tornam este projeto possível.
+• À UCC - Unidade de Cuidados Continuados do Jangurussu pelo apoio no Projeto 
+• Às Profa. LIZIANE HOBMEIR, Profa. PRISCILA GUIDOLIN e à UNINTER, pela orientação e oportunidade que tornam este projeto possível.
 • Comunidade Open Source pelas contribuições
 ________________________________________
 
