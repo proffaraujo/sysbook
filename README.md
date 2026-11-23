@@ -500,7 +500,7 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](L
 
 ## 🙏 **Agradecimentos**
 
-• À UCC - Unidade de Cuidados Continuados do Jangurussu pelo apoio no Projeto.
+• À UCC - Unidade de Cuidados Continuados do Jangurussu por sediar e acreditar neste Projeto Livro Aberto (SysBook).
 
 • Às Profa. LIZIANE HOBMEIR, Profa. PRISCILA GUIDOLIN e à UNINTER, pela orientação e oportunidade que tornam este projeto possível.
 
